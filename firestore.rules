@@ -1,0 +1,127 @@
+rules_version = '2';
+
+// Aturan keamanan Cloud Firestore untuk Kerabite.
+// Pasang di Firebase Console > Firestore Database > Rules, atau `firebase deploy --only firestore:rules`.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Progres KeraChallenge: hanya pemilik akun yang boleh membaca dan menulis progresnya sendiri.
+    match /users/{userId}/progress/kerachallenge {
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      // Hanya field hari (tantangan1_hari1 ... tantangan3_hari3) bernilai boolean dan updatedAt,
+      // dan hari yang sudah selesai tidak boleh diubah kembali jadi belum selesai.
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly([
+             'tantangan1_hari1', 'tantangan1_hari2', 'tantangan1_hari3',
+             'tantangan2_hari1', 'tantangan2_hari2', 'tantangan2_hari3',
+             'tantangan3_hari1', 'tantangan3_hari2', 'tantangan3_hari3',
+             'updatedAt'
+           ])
+        && request.resource.data.updatedAt is timestamp
+        && onlyTrueDays(request.resource.data)
+        && (resource == null || neverUndone(resource.data, request.resource.data));
+
+      allow delete: if false;
+    }
+
+    // Isi tugas KeraChallenge: jurnal Jali Hari 3, menu Tala Hari 1, pangan KeraFYI yang sudah dibuka.
+    match /users/{userId}/progress/kerachallenge_tugas {
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly([
+             'jurnal', 'jurnalDiubah', 'menuTala', 'menuTalaDiubah', 'panganDibuka', 'updatedAt'
+           ])
+        && request.resource.data.updatedAt is timestamp
+        && (!('jurnal' in request.resource.data) || (request.resource.data.jurnal is string
+              && request.resource.data.jurnal.size() <= 20000))
+        && (!('jurnalDiubah' in request.resource.data) || request.resource.data.jurnalDiubah is int)
+        && (!('menuTala' in request.resource.data)
+              || request.resource.data.menuTala in ['ubee', 'gogumappang', 'taro'])
+        && (!('menuTalaDiubah' in request.resource.data) || request.resource.data.menuTalaDiubah is int)
+        && (!('panganDibuka' in request.resource.data) || (request.resource.data.panganDibuka is list
+              && request.resource.data.panganDibuka.size() <= 10));
+
+      allow delete: if false;
+    }
+
+    // Foto dokumentasi KeraChallenge (Tala Hari 2-3): JPEG terkompres sebagai bytes, satu dokumen per foto.
+    // Firestore membatasi satu dokumen 1 MB; aplikasi mengompres foto di bawah 750 KB.
+    match /users/{userId}/kerachallenge_foto/{fotoId} {
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+
+      allow create: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly(['nama', 'data', 'dibuat', 'updatedAt'])
+        && request.resource.data.nama is string
+        && request.resource.data.nama.size() <= 200
+        && request.resource.data.data is bytes
+        && request.resource.data.data.size() <= 900000
+        && request.resource.data.dibuat is int
+        && request.resource.data.updatedAt is timestamp;
+
+      allow update: if false;
+    }
+
+    // Kiriman Kera Campaign: satu dokumen per hari, isi file ada di subkoleksi potongan.
+    // Tantangan 2 Hari 3 (Tala) hanya mengirim file; caption dan link hanya untuk Tantangan 3 Hari 3.
+    match /users/{userId}/kerachallenge_kirim/{kirimId} {
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && validKiriman(kirimId, request.resource.data);
+
+      // Potongan isi file (maks. 800 KB per dokumen; video/dokumen maks. 10 MB = 13 potongan).
+      match /potongan/{potonganId} {
+        allow read, delete: if request.auth != null && request.auth.uid == userId;
+
+        allow create, update: if request.auth != null
+          && request.auth.uid == userId
+          && kirimId in ['tantangan2_hari3', 'tantangan3_hari3']
+          && request.resource.data.keys().hasOnly(['file', 'urutan', 'data'])
+          && request.resource.data.file is string
+          && request.resource.data.file.size() <= 10
+          && request.resource.data.urutan is int
+          && request.resource.data.urutan >= 0
+          && request.resource.data.urutan < 20
+          && request.resource.data.data is bytes
+          && request.resource.data.data.size() <= 900000;
+      }
+    }
+
+    // Selain itu, semua ditolak.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+
+  // Nama field sudah dibatasi hasOnly; di sini cukup pastikan semua nilai selain updatedAt adalah true.
+  function onlyTrueDays(data) {
+    return data.values().removeAll([true]).size() == 1;
+  }
+
+  function neverUndone(before, after) {
+    return before.keys().removeAll(['updatedAt']).toSet().difference(after.keys().toSet()).size() == 0;
+  }
+
+  // Dokumen utama kiriman: daftar file (1-12), waktu kirim, dan khusus Tantangan 3 Hari 3 caption + link.
+  function validKiriman(kirimId, data) {
+    return data.daftarFile is list
+      && data.daftarFile.size() >= 1
+      && data.daftarFile.size() <= 12
+      && data.dikirim is timestamp
+      && data.updatedAt is timestamp
+      && (
+        (kirimId == 'tantangan2_hari3'
+          && data.keys().hasOnly(['daftarFile', 'dikirim', 'updatedAt']))
+        || (kirimId == 'tantangan3_hari3'
+          && data.keys().hasOnly(['caption', 'link', 'daftarFile', 'dikirim', 'updatedAt'])
+          && (!('caption' in data) || (data.caption is string && data.caption.size() <= 500))
+          && (!('link' in data) || (data.link is string && data.link.size() <= 500)))
+      );
+  }
+}

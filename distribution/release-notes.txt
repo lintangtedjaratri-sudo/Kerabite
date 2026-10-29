@@ -1,0 +1,1 @@
+v1.3: kirim dokumentasi Tantangan 2 & 3 Hari 3 kini cukup menampilkan notifikasi berhasil, tanpa pindah ke halaman kosong.
