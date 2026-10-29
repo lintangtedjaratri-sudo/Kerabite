@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "922003247945",
+    "project_id": "kerabites-975e0",
+    "storage_bucket": "kerabites-975e0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922003247945:android:bdfbf2af7a00e75a350098",
+        "android_client_info": {
+          "package_name": "com.test.cobacompose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "922003247945-uu5kv3hir6qp4c38idahvqg403h7faru.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.test.cobacompose",
+            "certificate_hash": "5a93011a62852e8b730d3bade8a8515adf721e08"
+          }
+        },
+        {
+          "client_id": "922003247945-u5rjhbt1olmn92k4bbm6jijph7rtmd4o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAc2H6EFgKRkHYiVeCm6qSB_8vj19exXqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922003247945-u5rjhbt1olmn92k4bbm6jijph7rtmd4o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
