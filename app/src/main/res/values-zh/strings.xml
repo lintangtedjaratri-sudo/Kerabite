@@ -30,6 +30,7 @@
     <string name="auth_msg_reset_sent">密码重置邮件已发送。</string>
     <string name="auth_msg_google_ok">Google 登录成功。</string>
     <string name="auth_msg_password_changed">密码修改成功。</string>
+    <string name="auth_msg_account_deleted">账号已成功删除。</string>
     <string name="auth_err_no_google">此设备上没有 Google 账户。请添加 Google 账户后重试。</string>
     <string name="auth_err_google_cancelled">Google 登录已取消。</string>
     <string name="auth_err_invalid_email">邮箱格式无效。</string>
@@ -80,6 +81,17 @@
     <string name="profile_error_mismatch">两次输入的新密码不一致。</string>
     <string name="profile_error_same">新密码不能与当前密码相同。</string>
     <string name="profile_password_changed">密码修改成功。</string>
+    <string name="profile_privacy_policy">隐私政策</string>
+    <string name="profile_privacy_policy_hint">了解 Kerabite 如何处理您的数据</string>
+    <string name="profile_deletion_page">数据删除信息</string>
+    <string name="profile_deletion_page_hint">无需应用即可申请删除</string>
+    <string name="profile_delete_account">删除账号</string>
+    <string name="profile_delete_account_hint">删除账号和所有 Kerabite 数据</string>
+    <string name="profile_delete_confirm_title">永久删除账号？</string>
+    <string name="profile_delete_confirm_text">您的账号、挑战进度、日志、照片和提交内容将被永久删除。此操作无法撤销。</string>
+    <string name="profile_delete_password_hint">输入密码以确认</string>
+    <string name="profile_delete_google_hint">系统会要求您再次选择 Google 账号以确认。</string>
+    <string name="profile_account_deleted">您的账号和 Kerabite 数据已删除。</string>
 
     <!-- 30_home -->
     <string name="home_menu">菜单</string>

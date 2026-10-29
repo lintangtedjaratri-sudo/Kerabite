@@ -30,6 +30,7 @@
     <string name="auth_msg_reset_sent">تم إرسال بريد إعادة تعيين كلمة المرور.</string>
     <string name="auth_msg_google_ok">تم تسجيل الدخول باستخدام Google.</string>
     <string name="auth_msg_password_changed">تم تغيير كلمة المرور بنجاح.</string>
+    <string name="auth_msg_account_deleted">تم حذف الحساب بنجاح.</string>
     <string name="auth_err_no_google">لا يوجد حساب Google على هذا الجهاز. أضف حساب Google ثم حاول مرة أخرى.</string>
     <string name="auth_err_google_cancelled">تم إلغاء تسجيل الدخول باستخدام Google.</string>
     <string name="auth_err_invalid_email">صيغة البريد الإلكتروني غير صحيحة.</string>
@@ -80,6 +81,17 @@
     <string name="profile_error_mismatch">كلمتا المرور الجديدتان غير متطابقتين.</string>
     <string name="profile_error_same">يجب أن تختلف كلمة المرور الجديدة عن الحالية.</string>
     <string name="profile_password_changed">تم تغيير كلمة المرور بنجاح.</string>
+    <string name="profile_privacy_policy">سياسة الخصوصية</string>
+    <string name="profile_privacy_policy_hint">تعرّف على كيفية تعامل Kerabite مع بياناتك</string>
+    <string name="profile_deletion_page">معلومات حذف البيانات</string>
+    <string name="profile_deletion_page_hint">اطلب الحذف من دون التطبيق</string>
+    <string name="profile_delete_account">حذف الحساب</string>
+    <string name="profile_delete_account_hint">احذف حسابك وجميع بيانات Kerabite</string>
+    <string name="profile_delete_confirm_title">هل تريد حذف حسابك نهائيًا؟</string>
+    <string name="profile_delete_confirm_text">سيتم حذف حسابك وتقدم التحديات واليوميات والصور والمشاركات نهائيًا. لا يمكن التراجع عن ذلك.</string>
+    <string name="profile_delete_password_hint">أدخل كلمة المرور للتأكيد</string>
+    <string name="profile_delete_google_hint">سيُطلب منك اختيار حساب Google مرة أخرى للتأكيد.</string>
+    <string name="profile_account_deleted">تم حذف حسابك وبيانات Kerabite.</string>
 
     <!-- 30_home -->
     <string name="home_menu">القائمة</string>

@@ -154,6 +154,13 @@ fun AppNavGraph(
                         passwordState = authState,
                         onChangePassword = authViewModel::changePassword,
                         onPasswordDialogClosed = authViewModel::resetState,
+                        onDeleteAccount = authViewModel::deleteAccount,
+                        onAccountDeleted = {
+                            closeDrawer()
+                            navController.navigate(Screen.Landing.route) {
+                                popUpTo(Screen.Home.route) { inclusive = true }
+                            }
+                        },
                         onLogoutClick = {
                             closeDrawer()
                             authViewModel.logout()

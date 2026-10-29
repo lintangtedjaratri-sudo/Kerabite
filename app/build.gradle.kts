@@ -93,6 +93,12 @@ android {
     androidResources {
         localeFilters += listOf("en", "in", "zh", "zh-rCN", "ar")
     }
+    // Semua bahasa harus tetap ada di instalasi karena pengguna menggantinya dari dalam aplikasi.
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

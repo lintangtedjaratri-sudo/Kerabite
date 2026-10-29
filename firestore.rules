@@ -23,7 +23,8 @@ service cloud.firestore {
         && onlyTrueDays(request.resource.data)
         && (resource == null || neverUndone(resource.data, request.resource.data));
 
-      allow delete: if false;
+      // Pengguna boleh menghapus data sendiri saat menghapus akun.
+      allow delete: if request.auth != null && request.auth.uid == userId;
     }
 
     // Isi tugas KeraChallenge: jurnal Jali Hari 3, menu Tala Hari 1, pangan KeraFYI yang sudah dibuka.
@@ -45,7 +46,7 @@ service cloud.firestore {
         && (!('panganDibuka' in request.resource.data) || (request.resource.data.panganDibuka is list
               && request.resource.data.panganDibuka.size() <= 10));
 
-      allow delete: if false;
+      allow delete: if request.auth != null && request.auth.uid == userId;
     }
 
     // Foto dokumentasi KeraChallenge (Tala Hari 2-3): JPEG terkompres sebagai bytes, satu dokumen per foto.

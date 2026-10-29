@@ -90,6 +90,13 @@ class AuthViewModel(
         repository.changePassword(currentPassword, newPassword)
     }
 
+    fun deleteAccount(context: Context, currentPassword: String?) = runAuthAction(
+        successMessage = R.string.auth_msg_account_deleted,
+        reloadUser = false
+    ) {
+        repository.deleteAccount(context, currentPassword)
+    }
+
     fun logout() {
         repository.logout()
         _userName.value = ""

@@ -33,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -95,6 +96,10 @@ import com.test.cobacompose.ui.theme.KeraPurple
 
 /** Nomor WhatsApp Pusat Bantuan (0812-4679-2343) dalam format internasional untuk wa.me. */
 private const val HELP_WHATSAPP_NUMBER = "6281246792343"
+private const val PRIVACY_POLICY_URL =
+    "https://lintangtedjaratri-sudo.github.io/Kerabite/privacy-policy.html"
+private const val ACCOUNT_DELETION_URL =
+    "https://lintangtedjaratri-sudo.github.io/Kerabite/account-deletion.html"
 
 /** Warna drawer; versi gelap dipakai saat Mode Gelap aktif. */
 private data class ProfileColors(
@@ -154,6 +159,17 @@ private data class ProfileStrings(
     val helpHint: String,
     val helpMessage: String,
     val noWhatsApp: String,
+    val privacyPolicy: String,
+    val privacyPolicyHint: String,
+    val deletionPage: String,
+    val deletionPageHint: String,
+    val deleteAccount: String,
+    val deleteAccountHint: String,
+    val deleteConfirmTitle: String,
+    val deleteConfirmText: String,
+    val deletePasswordHint: String,
+    val deleteGoogleHint: String,
+    val accountDeleted: String,
     val logout: String,
     val logoutConfirmTitle: String,
     val logoutConfirmText: String,
@@ -192,6 +208,17 @@ private fun profileStrings() = ProfileStrings(
     helpHint = stringResource(R.string.profile_help_hint),
     helpMessage = stringResource(R.string.profile_help_message),
     noWhatsApp = stringResource(R.string.profile_no_whats_app),
+    privacyPolicy = stringResource(R.string.profile_privacy_policy),
+    privacyPolicyHint = stringResource(R.string.profile_privacy_policy_hint),
+    deletionPage = stringResource(R.string.profile_deletion_page),
+    deletionPageHint = stringResource(R.string.profile_deletion_page_hint),
+    deleteAccount = stringResource(R.string.profile_delete_account),
+    deleteAccountHint = stringResource(R.string.profile_delete_account_hint),
+    deleteConfirmTitle = stringResource(R.string.profile_delete_confirm_title),
+    deleteConfirmText = stringResource(R.string.profile_delete_confirm_text),
+    deletePasswordHint = stringResource(R.string.profile_delete_password_hint),
+    deleteGoogleHint = stringResource(R.string.profile_delete_google_hint),
+    accountDeleted = stringResource(R.string.profile_account_deleted),
     logout = stringResource(R.string.profile_logout),
     logoutConfirmTitle = stringResource(R.string.profile_logout_confirm_title),
     logoutConfirmText = stringResource(R.string.profile_logout_confirm_text),
@@ -228,6 +255,8 @@ fun ProfileDrawer(
     passwordState: AuthState,
     onChangePassword: (currentPassword: String, newPassword: String) -> Unit,
     onPasswordDialogClosed: () -> Unit,
+    onDeleteAccount: (context: Context, currentPassword: String?) -> Unit,
+    onAccountDeleted: () -> Unit,
     onLogoutClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -238,6 +267,7 @@ fun ProfileDrawer(
     var showPasswordDialog by rememberSaveable { mutableStateOf(false) }
     var showAboutDialog by rememberSaveable { mutableStateOf(false) }
     var showLogoutDialog by rememberSaveable { mutableStateOf(false) }
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
     // Bahasa Arab dibaca dari kanan ke kiri, termasuk dialognya
     CompositionLocalProvider(LocalLayoutDirection provides language.layoutDirection) {
@@ -317,11 +347,36 @@ fun ProfileDrawer(
                     colors = colors,
                     onClick = { context.openHelpWhatsApp(strings) }
                 )
+                RowDivider(colors)
+                SettingsRow(
+                    icon = vectorIcon(Icons.Default.Lock),
+                    title = strings.privacyPolicy,
+                    subtitle = strings.privacyPolicyHint,
+                    colors = colors,
+                    onClick = { context.openWebPage(PRIVACY_POLICY_URL) }
+                )
+                RowDivider(colors)
+                SettingsRow(
+                    icon = vectorIcon(Icons.Default.Info),
+                    title = strings.deletionPage,
+                    subtitle = strings.deletionPageHint,
+                    colors = colors,
+                    onClick = { context.openWebPage(ACCOUNT_DELETION_URL) }
+                )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             LogoutButton(text = strings.logout, colors = colors, onClick = { showLogoutDialog = true })
+
+            TextButton(
+                onClick = { showDeleteDialog = true },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(Icons.Default.Delete, contentDescription = null, tint = KeraProfileLogout)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(strings.deleteAccount, color = KeraProfileLogout, fontWeight = FontWeight.SemiBold)
+            }
 
             Text(
                 text = "Kerabite ${strings.version} ${context.appVersionName()}",
@@ -388,6 +443,23 @@ fun ProfileDrawer(
             }
         )
     }
+
+    if (showDeleteDialog) {
+        DeleteAccountDialog(
+            strings = strings,
+            canChangePassword = canChangePassword,
+            state = passwordState,
+            onSubmit = { password -> onDeleteAccount(context, password) },
+            onDeleted = {
+                showDeleteDialog = false
+                onAccountDeleted()
+            },
+            onDismiss = {
+                showDeleteDialog = false
+                onPasswordDialogClosed()
+            }
+        )
+    }
     }
 }
 
@@ -400,6 +472,10 @@ private fun Context.openHelpWhatsApp(strings: ProfileStrings) {
     } catch (e: ActivityNotFoundException) {
         Toast.makeText(this, strings.noWhatsApp, Toast.LENGTH_SHORT).show()
     }
+}
+
+private fun Context.openWebPage(url: String) {
+    runCatching { startActivity(Intent(Intent.ACTION_VIEW, url.toUri())) }
 }
 
 private fun Context.appVersionName(): String =
@@ -718,6 +794,74 @@ private fun ChangePasswordDialog(
             TextButton(enabled = !loading, onClick = onDismiss) {
                 Text(strings.cancel, color = KeraPurple)
             }
+        }
+    )
+}
+
+@Composable
+private fun DeleteAccountDialog(
+    strings: ProfileStrings,
+    canChangePassword: Boolean,
+    state: AuthState,
+    onSubmit: (String?) -> Unit,
+    onDeleted: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    val context = LocalContext.current
+    var password by remember { mutableStateOf("") }
+    var localError by remember { mutableStateOf<String?>(null) }
+    val loading = state is AuthState.Loading
+
+    LaunchedEffect(state) {
+        if (state is AuthState.Success && state.messageRes == R.string.auth_msg_account_deleted) {
+            Toast.makeText(context, strings.accountDeleted, Toast.LENGTH_SHORT).show()
+            onDeleted()
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = { if (!loading) onDismiss() },
+        title = { Text(strings.deleteConfirmTitle, fontWeight = FontWeight.Bold) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(strings.deleteConfirmText)
+                if (canChangePassword) {
+                    AuthTextField(
+                        value = password,
+                        onValueChange = { password = it; localError = null },
+                        placeholder = strings.deletePasswordHint,
+                        enabled = !loading,
+                        isPassword = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                    )
+                } else {
+                    Text(strings.deleteGoogleHint, fontSize = 13.sp)
+                }
+                val error = localError ?: (state as? AuthState.Error)?.let { stringResource(it.messageRes) }
+                if (error != null) Text(error, color = KeraProfileLogout, fontSize = 12.sp)
+            }
+        },
+        confirmButton = {
+            TextButton(
+                enabled = !loading,
+                onClick = {
+                    localError = if (canChangePassword && password.isBlank()) strings.errorFillAll else null
+                    if (localError == null) onSubmit(password.takeIf { canChangePassword })
+                }
+            ) {
+                if (loading) {
+                    CircularProgressIndicator(
+                        color = KeraProfileLogout,
+                        strokeWidth = 2.dp,
+                        modifier = Modifier.size(18.dp)
+                    )
+                } else {
+                    Text(strings.deleteAccount, color = KeraProfileLogout, fontWeight = FontWeight.Bold)
+                }
+            }
+        },
+        dismissButton = {
+            TextButton(enabled = !loading, onClick = onDismiss) { Text(strings.cancel) }
         }
     )
 }

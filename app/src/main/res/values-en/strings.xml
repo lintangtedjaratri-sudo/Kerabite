@@ -30,6 +30,7 @@
     <string name="auth_msg_reset_sent">Password reset email has been sent.</string>
     <string name="auth_msg_google_ok">Signed in with Google.</string>
     <string name="auth_msg_password_changed">Password changed successfully.</string>
+    <string name="auth_msg_account_deleted">Account deleted successfully.</string>
     <string name="auth_err_no_google">There is no Google account on this device. Add a Google account and try again.</string>
     <string name="auth_err_google_cancelled">Google sign-in was cancelled.</string>
     <string name="auth_err_invalid_email">Invalid email format.</string>
@@ -80,6 +81,17 @@
     <string name="profile_error_mismatch">New passwords do not match.</string>
     <string name="profile_error_same">New password must differ from the current one.</string>
     <string name="profile_password_changed">Password changed successfully.</string>
+    <string name="profile_privacy_policy">Privacy Policy</string>
+    <string name="profile_privacy_policy_hint">Learn how Kerabite handles your data</string>
+    <string name="profile_deletion_page">Data Deletion Information</string>
+    <string name="profile_deletion_page_hint">Request deletion without the app</string>
+    <string name="profile_delete_account">Delete Account</string>
+    <string name="profile_delete_account_hint">Delete your account and all Kerabite data</string>
+    <string name="profile_delete_confirm_title">Permanently delete your account?</string>
+    <string name="profile_delete_confirm_text">Your account, challenge progress, journals, photos, and submissions will be permanently deleted. This cannot be undone.</string>
+    <string name="profile_delete_password_hint">Enter your password to confirm</string>
+    <string name="profile_delete_google_hint">You will be asked to choose your Google account again to confirm.</string>
+    <string name="profile_account_deleted">Your account and Kerabite data were deleted.</string>
 
     <!-- 30_home -->
     <string name="home_menu">Menu</string>

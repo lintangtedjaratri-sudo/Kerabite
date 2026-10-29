@@ -31,6 +31,7 @@
     <string name="auth_msg_reset_sent">Email reset password telah dikirim.</string>
     <string name="auth_msg_google_ok">Login Google berhasil.</string>
     <string name="auth_msg_password_changed">Kata sandi berhasil diubah.</string>
+    <string name="auth_msg_account_deleted">Akun berhasil dihapus.</string>
     <string name="auth_err_no_google">Tidak ada akun Google di perangkat ini. Tambahkan akun Google lalu coba lagi.</string>
     <string name="auth_err_google_cancelled">Login Google dibatalkan.</string>
     <string name="auth_err_invalid_email">Format email tidak valid.</string>
@@ -81,6 +82,17 @@
     <string name="profile_error_mismatch">Konfirmasi kata sandi tidak sama.</string>
     <string name="profile_error_same">Kata sandi baru harus berbeda dari yang lama.</string>
     <string name="profile_password_changed">Kata sandi berhasil diubah.</string>
+    <string name="profile_privacy_policy">Kebijakan Privasi</string>
+    <string name="profile_privacy_policy_hint">Baca cara Kerabite mengelola datamu</string>
+    <string name="profile_deletion_page">Informasi Penghapusan Data</string>
+    <string name="profile_deletion_page_hint">Cara meminta penghapusan tanpa aplikasi</string>
+    <string name="profile_delete_account">Hapus Akun</string>
+    <string name="profile_delete_account_hint">Hapus akun dan seluruh data Kerabite</string>
+    <string name="profile_delete_confirm_title">Hapus akun secara permanen?</string>
+    <string name="profile_delete_confirm_text">Akun, progres tantangan, jurnal, foto, dan kirimanmu akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.</string>
+    <string name="profile_delete_password_hint">Masukkan kata sandi untuk mengonfirmasi</string>
+    <string name="profile_delete_google_hint">Kamu akan diminta memilih akun Google lagi untuk mengonfirmasi.</string>
+    <string name="profile_account_deleted">Akun dan data Kerabite berhasil dihapus.</string>
 
     <!-- 30_home -->
     <string name="home_menu">Menu</string>
