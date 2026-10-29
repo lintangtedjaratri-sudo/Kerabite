@@ -1,0 +1,51 @@
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Gradle and Android build output
+.gradle/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Machine-specific Android SDK configuration and local secrets
+local.properties
+secret.properties
+
+# Release signing credentials (never commit private keys or passwords)
+keystore.properties
+keystore/
+*.jks
+*.keystore
+
+# Firebase App Distribution local/private data and generated package
+distribution/testers.txt
+distribution/groups.txt
+firebase-deploy.zip
+
+# Firebase/Google service-account credentials
+*-service-account.json
+service-account*.json
+
+# Generated application packages and mapping files
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+*.hprof
+
+# OS/editor clutter
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Local logs
+*.log
+
